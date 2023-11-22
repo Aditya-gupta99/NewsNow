@@ -3,7 +3,9 @@ package com.sparklead.newsnow
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.sparklead.newsnow.databinding.ActivityDashboardBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class DashboardActivity : AppCompatActivity() {
 
     private var _binding: ActivityDashboardBinding? = null

@@ -1,4 +1,4 @@
-package com.sparklead.newsnow.ui.fragment
+package com.sparklead.newsnow.ui.splash
 
 import android.os.Bundle
 import android.os.Handler

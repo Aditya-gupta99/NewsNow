@@ -1,22 +1,23 @@
-package com.sparklead.newsnow.ui.fragment
+package com.sparklead.newsnow.ui.detail
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.sparklead.newsnow.databinding.FragmentHomeBinding
+import com.sparklead.newsnow.databinding.FragmentNewsDetailBinding
 
-class HomeFragment : Fragment() {
+class NewsDetailFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
+    private var _binding: FragmentNewsDetailBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentNewsDetailBinding.inflate(inflater, container, false)
+
         return binding.root
     }
 
