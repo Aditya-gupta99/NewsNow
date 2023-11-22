@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.sparklead.newsnow.databinding.FragmentHomeBinding
 import com.sparklead.newsnow.databinding.ItemNewsBinding
 import com.sparklead.newsnow.model.Article
 import com.sparklead.newsnow.utils.GlideLoader
@@ -14,6 +15,18 @@ class NewsItemAdapter : RecyclerView.Adapter<NewsItemAdapter.NewsViewHolder>() {
     var onItemClick: ((Article) -> Unit)? = null
 
     inner class NewsViewHolder(val binding: ItemNewsBinding) : RecyclerView.ViewHolder(binding.root)
+
+    private lateinit var recyclerView: RecyclerView
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        this.recyclerView = recyclerView
+    }
+
+    fun submitList(list: List<Article>) {
+        differ.submitList(list) {
+            recyclerView.scrollToPosition(0)
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
         return NewsViewHolder(

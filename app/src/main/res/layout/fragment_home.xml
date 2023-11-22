@@ -56,7 +56,7 @@
                 android:src="@drawable/search_icon" />
 
             <androidx.appcompat.widget.SearchView
-                android:id="@+id/sv_anime"
+                android:id="@+id/sv_news"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/AppSearchView"

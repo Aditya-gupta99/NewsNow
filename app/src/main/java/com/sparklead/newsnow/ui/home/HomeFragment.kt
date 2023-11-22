@@ -1,20 +1,23 @@
 package com.sparklead.newsnow.ui.home
 
-import android.content.ContentValues
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.messaging.FirebaseMessaging
+import com.sparklead.newsnow.R
 import com.sparklead.newsnow.databinding.FragmentHomeBinding
 import com.sparklead.newsnow.firebase.FirebaseService
 import com.sparklead.newsnow.model.Article
@@ -33,6 +36,9 @@ class HomeFragment : Fragment() {
     private lateinit var viewModel: HomeViewModel
     private val newsItemAdapter by lazy { NewsItemAdapter() }
     private var token = ""
+    private var checkedFilter = 0
+    private var newsListSuccess = ArrayList<Article>()
+    private val handler = Handler()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,7 +47,8 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
 
-        FirebaseService.sharedPref = requireContext().getSharedPreferences(Constants.SHARED_PREFERENCE, Context.MODE_PRIVATE)
+        FirebaseService.sharedPref =
+            requireContext().getSharedPreferences(Constants.SHARED_PREFERENCE, Context.MODE_PRIVATE)
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
                 Log.w("Fcm token", "Fetching FCM registration token failed", task.exception)
@@ -94,6 +101,40 @@ class HomeFragment : Fragment() {
         binding.fabNotification.setOnClickListener {
             sendNotification()
         }
+
+        binding.filterSelectionButton.setOnClickListener {
+            showFilterDialog()
+        }
+
+        binding.svNews.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextChange(text: String?): Boolean {
+                handler.removeCallbacksAndMessages(null)
+                handler.postDelayed({
+                    newsFilter(text)
+                }, 300)
+                return true
+            }
+
+            override fun onQueryTextSubmit(text: String?): Boolean {
+                return false
+            }
+        })
+    }
+
+    private fun newsFilter(text: String?) {
+        if (text == null) newsItemAdapter.submitList(newsListSuccess)
+        val filterNewsList = ArrayList<Article>()
+        for (it in newsListSuccess) {
+            if (it.title.contains(text ?: "", true)) {
+                filterNewsList.add(it)
+            }
+        }
+        if (filterNewsList.size == 0) Toast.makeText(
+            requireContext(),
+            "No Article found",
+            Toast.LENGTH_SHORT
+        ).show()
+        newsItemAdapter.submitList(filterNewsList)
     }
 
     private fun sendNotification() {
@@ -104,11 +145,13 @@ class HomeFragment : Fragment() {
         ).also {
             viewModel.sendNotification(it)
         }
-        Toast.makeText(requireContext(),"Notification fab has been pressed",Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Notification fab has been pressed", Toast.LENGTH_SHORT)
+            .show()
     }
 
     private fun onSuccessNewsList(newsList: List<Article>) {
-        newsItemAdapter.differ.submitList(newsList)
+        newsItemAdapter.submitList(newsList)
+        newsListSuccess = newsList as ArrayList<Article>
     }
 
     private fun onError(message: String) {
@@ -119,5 +162,68 @@ class HomeFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    private fun showFilterDialog() {
+        val dialogBuilder = MaterialAlertDialogBuilder(requireContext())
+        dialogBuilder.setSingleChoiceItems(
+            R.array.search_options,
+            checkedFilter
+        ) { dialog, index ->
+            checkedFilter = index
+            onClickSearch(index)
+            binding.filterSelectionButton.text =
+                resources.getStringArray(R.array.search_options)[index]
+            dialog.dismiss()
+        }
+        dialogBuilder.show()
+    }
+
+    private fun onClickSearch(index: Int) {
+        when (index) {
+            0 -> {
+                sortNormal()
+            }
+
+            1 -> {
+                sortOldToNew()
+            }
+
+            2 -> {
+                sortNewToOld()
+            }
+
+            3 -> {
+                sortAToZ()
+            }
+
+            4 -> {
+                sortZToA()
+            }
+        }
+    }
+
+    private fun sortNormal() {
+        newsItemAdapter.submitList(newsListSuccess)
+    }
+
+    private fun sortAToZ() {
+        val temp = newsListSuccess
+        newsItemAdapter.submitList(temp.sortedBy { it.title })
+    }
+
+    private fun sortOldToNew() {
+        val temp = newsListSuccess
+        newsItemAdapter.submitList(temp.sortedBy { it.publishedAt })
+    }
+
+    private fun sortNewToOld() {
+        val temp = newsListSuccess
+        newsItemAdapter.submitList(temp.sortedByDescending { it.publishedAt })
+    }
+
+    private fun sortZToA() {
+        val temp = newsListSuccess
+        newsItemAdapter.submitList(temp.sortedByDescending { it.title })
     }
 }
