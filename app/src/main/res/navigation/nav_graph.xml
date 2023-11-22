@@ -18,7 +18,11 @@
         android:id="@+id/newsDetailFragment"
         android:name="com.sparklead.newsnow.ui.detail.NewsDetailFragment"
         android:label="fragment_news_detail"
-        tools:layout="@layout/fragment_news_detail" />
+        tools:layout="@layout/fragment_news_detail" >
+        <argument
+            android:name="article"
+            app:argType="com.sparklead.newsnow.model.Article" />
+    </fragment>
     <fragment
         android:id="@+id/splashScreenFragment"
         android:name="com.sparklead.newsnow.ui.splash.SplashScreenFragment"
@@ -26,6 +30,8 @@
         tools:layout="@layout/fragment_splash_screen" >
         <action
             android:id="@+id/action_splashScreenFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/splashScreenFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
 </navigation>
