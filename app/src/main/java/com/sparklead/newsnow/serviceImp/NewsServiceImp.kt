@@ -2,6 +2,7 @@ package com.sparklead.newsnow.serviceImp
 
 import com.sparklead.newsnow.model.Article
 import com.sparklead.newsnow.model.Source
+import com.sparklead.newsnow.remote.HttpRoutes
 import com.sparklead.newsnow.service.NewsService
 import com.sparklead.newsnow.utils.Constants
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +15,7 @@ import java.net.URL
 
 class NewsServiceImp : NewsService {
     override suspend fun getAllNewsArticle(): List<Article> = withContext(Dispatchers.IO) {
-        val connection = URL(Constants.BASE_URL).openConnection() as HttpURLConnection
+        val connection = URL(HttpRoutes.BASE_URL).openConnection() as HttpURLConnection
         connection.requestMethod = "GET"
         connection.setRequestProperty("Content-Type", "application/json")
         connection.setRequestProperty("Accept", "application/json")

@@ -1,6 +1,7 @@
 package com.sparklead.newsnow.di
 
 import com.sparklead.newsnow.service.NewsService
+import com.sparklead.newsnow.service.NotificationService
 import com.sparklead.newsnow.ui.home.NewsListRepository
 import com.sparklead.newsnow.ui.home.NewsListRepositoryImp
 import dagger.Module
@@ -15,7 +16,10 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideNewsListRepository(service: NewsService): NewsListRepository =
-        NewsListRepositoryImp(service)
+    fun provideNewsListRepository(
+        service: NewsService,
+        notificationService: NotificationService
+    ): NewsListRepository =
+        NewsListRepositoryImp(service, notificationService)
 
 }

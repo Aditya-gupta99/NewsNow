@@ -2,6 +2,7 @@ package com.sparklead.newsnow.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sparklead.newsnow.model.PushNotification
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,6 +22,10 @@ class HomeViewModel @Inject constructor(private val repository: NewsListReposito
         }.collect {
             _homeUiState.value = HomeUiState.SuccessNewsList(it)
         }
+    }
+
+    fun sendNotification(notification: PushNotification) = viewModelScope.launch(Dispatchers.IO) {
+        repository.sendNotification(notification)
     }
 
 }

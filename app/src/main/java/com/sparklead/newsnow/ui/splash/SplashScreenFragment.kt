@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.messaging.FirebaseMessaging
 import com.sparklead.newsnow.R
 import com.sparklead.newsnow.databinding.FragmentSplashScreenBinding
 

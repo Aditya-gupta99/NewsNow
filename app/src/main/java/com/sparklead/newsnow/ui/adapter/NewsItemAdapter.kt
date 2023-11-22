@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.sparklead.newsnow.databinding.ItemNewsBinding
 import com.sparklead.newsnow.model.Article
+import com.sparklead.newsnow.utils.GlideLoader
 
 class NewsItemAdapter : RecyclerView.Adapter<NewsItemAdapter.NewsViewHolder>() {
 
@@ -33,6 +34,10 @@ class NewsItemAdapter : RecyclerView.Adapter<NewsItemAdapter.NewsViewHolder>() {
                 binding.cvNews.setOnClickListener {
                     onItemClick?.invoke(this)
                 }
+                GlideLoader(itemView.context).loadNewsPicture(this.urlToImage, binding.ivNews)
+                binding.tvAuthor.text = this.author
+                val date = this.publishedAt.split("T")
+                binding.tvTime.text = date[0] + "   " + date[1].subSequence(0,date[1].length-1)
             }
             this.setIsRecyclable(false)
         }

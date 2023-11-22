@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "860221330070",
+    "project_id": "newsnow-5f1bc",
+    "storage_bucket": "newsnow-5f1bc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:860221330070:android:7982df753761d267f668b7",
+        "android_client_info": {
+          "package_name": "com.sparklead.newsnow"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTIB3GTfowXKw-aWtptuK9Hyn9_o4Z27U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

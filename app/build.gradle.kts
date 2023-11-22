@@ -5,6 +5,7 @@ plugins {
     id("androidx.navigation.safeargs.kotlin")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -61,6 +62,18 @@ dependencies {
     // coroutine dependency
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
-
+    // webView
     implementation("androidx.webkit:webkit:1.5.0")
+
+    //glide library
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.13.0")
+
+    // firebase cloud messaging
+    implementation("com.google.firebase:firebase-messaging:23.3.1")
+
+    implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
+    implementation("com.google.firebase:firebase-analytics")
+
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.1")
 }
