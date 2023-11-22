@@ -60,4 +60,7 @@ dependencies {
 
     // coroutine dependency
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
+
+    implementation("androidx.webkit:webkit:1.5.0")
 }
