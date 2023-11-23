@@ -17,6 +17,7 @@ class HomeViewModel @Inject constructor(private val repository: NewsListReposito
     val homeUiState = _homeUiState
 
     fun getAllNewsList() = viewModelScope.launch(Dispatchers.IO) {
+        _homeUiState.value = HomeUiState.Loading
         repository.getAllNewsArticle().catch {
             _homeUiState.value = HomeUiState.Error(it.message.toString())
         }.collect {

@@ -1,6 +1,8 @@
 package com.sparklead.newsnow.ui.home
 
+import android.animation.ObjectAnimator
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -8,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -25,6 +28,7 @@ import com.sparklead.newsnow.model.NotificationData
 import com.sparklead.newsnow.model.PushNotification
 import com.sparklead.newsnow.ui.adapter.NewsItemAdapter
 import com.sparklead.newsnow.utils.Constants
+import com.sparklead.newsnow.utils.Network
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -40,6 +44,7 @@ class HomeFragment : Fragment() {
     private var newsListSuccess = listOf<Article>()
     private val handler = Handler()
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -60,7 +65,13 @@ class HomeFragment : Fragment() {
 
         FirebaseMessaging.getInstance().subscribeToTopic("/topic/$token")
 
-        viewModel.getAllNewsList()
+        if (Network.isOnline(requireContext())) viewModel.getAllNewsList()
+        else {
+            Toast.makeText(requireContext(), "You are offline !", Toast.LENGTH_SHORT).show()
+            binding.pbLoading.visibility = View.INVISIBLE
+            binding.tvErrorMessage.visibility = View.VISIBLE
+            binding.tvErrorMessage.text = "Nothing to show in offline :("
+        }
         setUpAdapter()
         return binding.root
     }
@@ -74,19 +85,27 @@ class HomeFragment : Fragment() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         lifecycleScope.launch {
             viewModel.homeUiState.collect {
                 when (it) {
-                    is HomeUiState.Empty -> {}
+                    is HomeUiState.Empty -> {
+                    }
+
                     is HomeUiState.Error -> {
+                        binding.pbLoading.visibility = View.INVISIBLE
                         onError(it.message)
                     }
 
-                    is HomeUiState.Loading -> {}
+                    is HomeUiState.Loading -> {
+                        binding.pbLoading.visibility = View.VISIBLE
+                    }
+
                     is HomeUiState.SuccessNewsList -> {
+                        binding.pbLoading.visibility = View.INVISIBLE
                         onSuccessNewsList(it.newsList)
                     }
                 }
@@ -99,7 +118,13 @@ class HomeFragment : Fragment() {
         }
 
         binding.fabNotification.setOnClickListener {
-            sendNotification()
+            if (Network.isOnline(requireContext())) sendNotification() else Toast.makeText(
+                requireContext(),
+                "You are offline !",
+                Toast.LENGTH_SHORT
+            ).show()
+
+
         }
 
         binding.filterSelectionButton.setOnClickListener {
@@ -119,6 +144,12 @@ class HomeFragment : Fragment() {
                 return false
             }
         })
+
+        binding.pbLoading.max = 10
+
+        ObjectAnimator.ofInt(binding.pbLoading, "progress", 9)
+            .setDuration(2000)
+            .start()
     }
 
     private fun newsFilter(text: String?) {
@@ -128,11 +159,12 @@ class HomeFragment : Fragment() {
                 filterNewsList.add(it)
             }
         }
-        if (filterNewsList.size == 0) Toast.makeText(
-            requireContext(),
-            "No Article found",
-            Toast.LENGTH_SHORT
-        ).show()
+        if (filterNewsList.size == 0) {
+            binding.tvErrorMessage.visibility = View.VISIBLE
+            binding.tvErrorMessage.text = "No article found :("
+        } else {
+            binding.tvErrorMessage.visibility = View.GONE
+        }
         newsItemAdapter.submitList(filterNewsList)
     }
 

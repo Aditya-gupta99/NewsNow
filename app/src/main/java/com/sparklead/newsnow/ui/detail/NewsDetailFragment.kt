@@ -1,7 +1,10 @@
 package com.sparklead.newsnow.ui.detail
 
+import android.animation.ObjectAnimator
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,11 +39,20 @@ class NewsDetailFragment : Fragment() {
             WebSettingsCompat.setAlgorithmicDarkeningAllowed(binding.wbNews.settings, true)
         }
 
+        binding.pbLoading.max = 10
+
+        ObjectAnimator.ofInt(binding.pbLoading, "progress", 10)
+            .setDuration(3000)
+            .start()
+
         binding.wbNews.apply {
             webViewClient = WebViewClient()
             loadUrl(args.article.url)
         }
 
+        Handler(Looper.getMainLooper()).postDelayed({
+            binding.pbLoading.visibility = View.GONE
+        }, 3000)
 
     }
 

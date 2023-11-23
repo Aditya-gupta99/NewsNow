@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
+    android:background="@color/light_gray"
     android:orientation="vertical"
     tools:context=".ui.home.HomeFragment">
 
@@ -21,7 +22,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/outfit_medium"
             android:text="NewsNow"
-            android:textColor="@color/black"
+            android:textColor="@color/light_green"
             android:textSize="28sp"
             android:textStyle="bold" />
 
@@ -33,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="55sp"
         android:layout_margin="15dp"
-        android:backgroundTint="@color/white"
+        android:backgroundTint="@color/dark_gray"
         android:elevation="25dp"
         app:cardCornerRadius="10sp"
         app:cardElevation="20sp"
@@ -53,6 +54,7 @@
                 android:layout_marginStart="17.5sp"
                 android:layout_marginTop="17.5sp"
                 android:layout_marginBottom="17.5sp"
+                app:tint="@color/light_green"
                 android:src="@drawable/search_icon" />
 
             <androidx.appcompat.widget.SearchView
@@ -75,10 +77,21 @@
         android:background="@drawable/round_shape_sheet"
         android:layout_marginTop="15sp"
         android:orientation="vertical"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rectangle_1">
+
+        <ProgressBar
+            android:id="@+id/pb_loading"
+            style="?android:progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_marginStart="20sp"
+            android:layout_marginEnd="20sp"
+            android:progressTint="@color/light_green"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -110,6 +123,20 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/tv_error_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="error"
+            android:layout_marginTop="100dp"
+            android:visibility="gone"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            android:fontFamily="@font/outfit_regular"
+            android:textSize="18sp"
+            />
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_news_list"
@@ -127,6 +154,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/baseline_notifications_none_24"
+        app:backgroundTint="@color/light_green"
         android:layout_margin="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
