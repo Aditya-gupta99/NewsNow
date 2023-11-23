@@ -8,6 +8,7 @@ import java.io.IOException
 
 class GlideLoader(private val context: Context) {
 
+    // load news images
     fun loadNewsPicture(image: Any, imageView: ImageView) {
         try {
             Glide

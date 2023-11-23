@@ -14,6 +14,8 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 class NewsServiceImp : NewsService {
+
+    // get request for news
     override suspend fun getAllNewsArticle(): List<Article> = withContext(Dispatchers.IO) {
         val connection = URL(HttpRoutes.BASE_URL).openConnection() as HttpURLConnection
         connection.requestMethod = "GET"
@@ -36,6 +38,8 @@ class NewsServiceImp : NewsService {
             return@withContext parseJsonResponse(response.toString())
         }
     }
+
+    // data parsing for article
 
     private fun parseJsonResponse(jsonString: String): List<Article> {
         val articlesList = mutableListOf<Article>()

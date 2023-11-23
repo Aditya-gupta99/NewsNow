@@ -23,6 +23,7 @@ class SplashScreenFragment : Fragment() {
     ): View {
         _binding = FragmentSplashScreenBinding.inflate(inflater, container, false)
 
+        // after 1.5 sec navigation to next page
         Handler(Looper.getMainLooper()).postDelayed({
             findNavController().navigate(R.id.action_splashScreenFragment_to_homeFragment)
         }, 1500)

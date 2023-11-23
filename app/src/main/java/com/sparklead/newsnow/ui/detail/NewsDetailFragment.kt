@@ -35,16 +35,19 @@ class NewsDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // setting up dark theme for webView
         if (WebViewFeature.isFeatureSupported(WebViewFeature.ALGORITHMIC_DARKENING)) {
             WebSettingsCompat.setAlgorithmicDarkeningAllowed(binding.wbNews.settings, true)
         }
 
+        // setup progress bar
         binding.pbLoading.max = 10
 
         ObjectAnimator.ofInt(binding.pbLoading, "progress", 10)
             .setDuration(3000)
             .start()
 
+        // web view setup
         binding.wbNews.apply {
             webViewClient = WebViewClient()
             loadUrl(args.article.url)

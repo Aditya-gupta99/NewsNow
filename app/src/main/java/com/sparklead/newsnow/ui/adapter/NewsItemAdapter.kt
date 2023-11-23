@@ -12,6 +12,7 @@ import com.sparklead.newsnow.utils.GlideLoader
 
 class NewsItemAdapter : RecyclerView.Adapter<NewsItemAdapter.NewsViewHolder>() {
 
+    // onclick if user select any article
     var onItemClick: ((Article) -> Unit)? = null
 
     inner class NewsViewHolder(val binding: ItemNewsBinding) : RecyclerView.ViewHolder(binding.root)

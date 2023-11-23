@@ -42,6 +42,7 @@ class FirebaseService : FirebaseMessagingService() {
     override fun onMessageReceived(p0: RemoteMessage) {
         super.onMessageReceived(p0)
 
+        // checking for type = demo and show notification
         if (p0.data["type"] == "demo") {
             val intent = Intent(this, DashboardActivity::class.java)
             val notificationManager =

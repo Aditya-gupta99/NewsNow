@@ -52,6 +52,7 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
 
+        // saving firebase token in sharedPreference
         FirebaseService.sharedPref =
             requireContext().getSharedPreferences(Constants.SHARED_PREFERENCE, Context.MODE_PRIVATE)
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
@@ -63,8 +64,10 @@ class HomeFragment : Fragment() {
             FirebaseService.token = token
         })
 
+        // subscribing fcm topic
         FirebaseMessaging.getInstance().subscribeToTopic("/topic/$token")
 
+        // checking internet connection if connected then call api else show error toast and text
         if (Network.isOnline(requireContext())) viewModel.getAllNewsList()
         else {
             Toast.makeText(requireContext(), "You are offline !", Toast.LENGTH_SHORT).show()
@@ -76,6 +79,7 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
+    // adapter setup
     private fun setUpAdapter() {
         binding.apply {
             rvNewsList.apply {
@@ -89,6 +93,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // observing state
         lifecycleScope.launch {
             viewModel.homeUiState.collect {
                 when (it) {
@@ -112,11 +117,13 @@ class HomeFragment : Fragment() {
             }
         }
 
+        // on article select
         newsItemAdapter.onItemClick = {
             val action = HomeFragmentDirections.actionHomeFragmentToNewsDetailFragment(it)
             findNavController().navigate(action)
         }
 
+        // call notification
         binding.fabNotification.setOnClickListener {
             if (Network.isOnline(requireContext())) sendNotification() else Toast.makeText(
                 requireContext(),
@@ -131,6 +138,7 @@ class HomeFragment : Fragment() {
             showFilterDialog()
         }
 
+        // search query
         binding.svNews.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(text: String?): Boolean {
                 handler.removeCallbacksAndMessages(null)
@@ -145,6 +153,7 @@ class HomeFragment : Fragment() {
             }
         })
 
+        // progress bar setup
         binding.pbLoading.max = 10
 
         ObjectAnimator.ofInt(binding.pbLoading, "progress", 9)
@@ -152,6 +161,7 @@ class HomeFragment : Fragment() {
             .start()
     }
 
+    // news filter
     private fun newsFilter(text: String?) {
         val filterNewsList = ArrayList<Article>()
         for (it in newsListSuccess) {
@@ -168,6 +178,7 @@ class HomeFragment : Fragment() {
         newsItemAdapter.submitList(filterNewsList)
     }
 
+    // putting value in fcm payload
     private fun sendNotification() {
         val topic = "/topic/$token"
         PushNotification(
@@ -195,6 +206,7 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
+    // filter dialog
     private fun showFilterDialog() {
         val dialogBuilder = MaterialAlertDialogBuilder(requireContext())
         dialogBuilder.setSingleChoiceItems(

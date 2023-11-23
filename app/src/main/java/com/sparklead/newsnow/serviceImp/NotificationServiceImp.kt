@@ -14,6 +14,7 @@ import java.net.URL
 
 class NotificationServiceImp : NotificationService {
 
+    // send notification post request
     override suspend fun pushNotification(notification: PushNotification) =
         withContext(Dispatchers.IO) {
 
