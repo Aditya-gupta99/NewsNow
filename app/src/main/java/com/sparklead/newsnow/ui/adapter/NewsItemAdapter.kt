@@ -16,16 +16,11 @@ class NewsItemAdapter : RecyclerView.Adapter<NewsItemAdapter.NewsViewHolder>() {
 
     inner class NewsViewHolder(val binding: ItemNewsBinding) : RecyclerView.ViewHolder(binding.root)
 
-    private lateinit var recyclerView: RecyclerView
-    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-        super.onAttachedToRecyclerView(recyclerView)
-        this.recyclerView = recyclerView
-    }
+    private var newsList = listOf<Article>()
 
     fun submitList(list: List<Article>) {
-        differ.submitList(list) {
-            recyclerView.scrollToPosition(0)
-        }
+        newsList = list
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
@@ -38,11 +33,11 @@ class NewsItemAdapter : RecyclerView.Adapter<NewsItemAdapter.NewsViewHolder>() {
         )
     }
 
-    override fun getItemCount() = differ.currentList.size
+    override fun getItemCount() = newsList.size
 
     override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
         with(holder) {
-            with(differ.currentList[position]) {
+            with(newsList[position]) {
                 binding.tvTitle.text = this.title
                 binding.cvNews.setOnClickListener {
                     onItemClick?.invoke(this)
@@ -56,16 +51,4 @@ class NewsItemAdapter : RecyclerView.Adapter<NewsItemAdapter.NewsViewHolder>() {
         }
 
     }
-
-    private val differCallback = object : DiffUtil.ItemCallback<Article>() {
-        override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean {
-            return oldItem.title == newItem.title
-        }
-
-        override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean {
-            return oldItem == newItem
-        }
-    }
-
-    val differ = AsyncListDiffer(this, differCallback)
 }

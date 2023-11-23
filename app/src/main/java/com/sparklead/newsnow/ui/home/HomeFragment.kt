@@ -37,7 +37,7 @@ class HomeFragment : Fragment() {
     private val newsItemAdapter by lazy { NewsItemAdapter() }
     private var token = ""
     private var checkedFilter = 0
-    private var newsListSuccess = ArrayList<Article>()
+    private var newsListSuccess = listOf<Article>()
     private val handler = Handler()
 
     override fun onCreateView(
@@ -122,7 +122,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun newsFilter(text: String?) {
-        if (text == null) newsItemAdapter.submitList(newsListSuccess)
         val filterNewsList = ArrayList<Article>()
         for (it in newsListSuccess) {
             if (it.title.contains(text ?: "", true)) {
@@ -151,7 +150,7 @@ class HomeFragment : Fragment() {
 
     private fun onSuccessNewsList(newsList: List<Article>) {
         newsItemAdapter.submitList(newsList)
-        newsListSuccess = newsList as ArrayList<Article>
+        newsListSuccess = newsList
     }
 
     private fun onError(message: String) {
@@ -208,22 +207,18 @@ class HomeFragment : Fragment() {
     }
 
     private fun sortAToZ() {
-        val temp = newsListSuccess
-        newsItemAdapter.submitList(temp.sortedBy { it.title })
+        newsItemAdapter.submitList(newsListSuccess.sortedBy { it.title })
     }
 
     private fun sortOldToNew() {
-        val temp = newsListSuccess
-        newsItemAdapter.submitList(temp.sortedBy { it.publishedAt })
+        newsItemAdapter.submitList(newsListSuccess.sortedBy { it.publishedAt })
     }
 
     private fun sortNewToOld() {
-        val temp = newsListSuccess
-        newsItemAdapter.submitList(temp.sortedByDescending { it.publishedAt })
+        newsItemAdapter.submitList(newsListSuccess.sortedByDescending { it.publishedAt })
     }
 
     private fun sortZToA() {
-        val temp = newsListSuccess
-        newsItemAdapter.submitList(temp.sortedByDescending { it.title })
+        newsItemAdapter.submitList(newsListSuccess.sortedByDescending { it.title })
     }
 }
